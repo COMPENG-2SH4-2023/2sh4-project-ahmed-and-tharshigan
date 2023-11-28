@@ -4,7 +4,7 @@ Project Preparation Activity 3
 
 You must watch the briefing video and read through the manual to engage in the development activities.
 
-Student 1:
+Student 1: Ahmed Khaleel
 
 Section: L09
 
@@ -12,10 +12,10 @@ MacID: khalea2
 
 StudentID: 400459125
 
-Student 2:
+Student 2: Tharshigan Vithiyananthan
 
-Section: [Insert your lab section]
+Section: L03
 
-MacID: [Insert your macID here]
+MacID: vithiyat
 
-StudentID: [Insert your numerical student ID here]
+StudentID: 400461766
