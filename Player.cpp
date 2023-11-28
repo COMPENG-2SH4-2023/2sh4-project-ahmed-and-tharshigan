@@ -9,7 +9,7 @@ Player::Player(GameMechs* thisGMRef)
     // more actions to be included
 
     //Initial player starting position
-    playerPos.setObjPos(5,5,'*'); //CHANGE INITIAL POSITION once board is set
+    playerPos.setObjPos(mainGameMechsRef->getBoardSizeX()/2, mainGameMechsRef->getBoardSizeY()/2, '*'); //CHANGE INITIAL POSITION once board is set
 }
 
 
@@ -28,6 +28,9 @@ void Player::updatePlayerDir()
 {
     // PPA3 input processing logic
     //NOTE: input not defined - get input from a method in GameMech class using the reference pointer to GameMech class defined in private data members
+    
+    char input = mainGameMechsRef->getInput();
+    
     switch(input){
         
         case 'w':
@@ -63,6 +66,9 @@ void Player::movePlayer()
 
     //NOTE: COL_SIZE is the max number of columns in gameboard
     //      ROW_SIZE is max number of rows in gameboard
+    int col_size = mainGameMechsRef->getBoardSizeX();
+    int row_size = mainGameMechsRef->getBoardSizeY();
+
     switch(myDir){
         case UP:
             //Subtracting y position by 1 to move player object up by one
@@ -70,7 +76,7 @@ void Player::movePlayer()
             
             //If statement to check if player reaches top of the game board
             if(playerPos.y == 0){
-                //player.y = COL-SIZE-2
+                playerPos.y = col_size-2;
             }
 
             break;
@@ -79,9 +85,9 @@ void Player::movePlayer()
             playerPos.y++;
 
             //If statement to check if player reaches bottom of the game board
-            // if (playerPos.y == COL_SIZE-1){
-            //     playerPos.y = 1;
-            // }
+            if (playerPos.y == col_size-1){
+                playerPos.y = 1;
+            }
 
             break;
 
@@ -91,7 +97,7 @@ void Player::movePlayer()
 
             //If statement to check if player reaches the left border of game board
             if (playerPos.x == 0){
-                //playerPos.x = ROW_SIZE-2;
+                playerPos.x = row_size-2;
             }
 
             break;
@@ -101,9 +107,9 @@ void Player::movePlayer()
             playerPos.x++;
 
             //If statement to check if player reaches the right border of game board
-            // if (playerPos.x == ROW_SIZE-1){
-            //     playerPos.x = 1;
-            // }
+            if (playerPos.x == row_size-1){
+                playerPos.x = 1;
+            }
 
             break;
     }
