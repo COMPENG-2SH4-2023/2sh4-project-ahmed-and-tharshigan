@@ -27,8 +27,8 @@ void Player::getPlayerPos(objPos &returnPos)
 void Player::updatePlayerDir()
 {
     // PPA3 input processing logic
-    //NOTE: input not defined - get input from a method in GameMech class using the reference pointer to GameMech class defined in private data members
-    
+
+    //Receiving input through getInput() from GameMechs class    
     char input = mainGameMechsRef->getInput();
     
     switch(input){
@@ -66,8 +66,8 @@ void Player::movePlayer()
 
     //NOTE: COL_SIZE is the max number of columns in gameboard
     //      ROW_SIZE is max number of rows in gameboard
-    int col_size = mainGameMechsRef->getBoardSizeX();
-    int row_size = mainGameMechsRef->getBoardSizeY();
+    int col_size = mainGameMechsRef->getBoardSizeY();
+    int row_size = mainGameMechsRef->getBoardSizeX();
 
     switch(myDir){
         case UP:
