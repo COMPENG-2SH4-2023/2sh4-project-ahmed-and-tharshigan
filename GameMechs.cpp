@@ -21,7 +21,9 @@ GameMechs::GameMechs(int boardX, int boardY)
     score = 0;
 }
 
-// do you need a destructor?
+// do you need a destructor? 
+
+// ahmed: ^ - only if heap data members allocated in later iterations
 
 
 

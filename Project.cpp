@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define DELAY_CONST 100000
+#define DELAY_CONST 100000 // 0.1s
 
 //Game mechanics object
 GameMechs* myGM;

@@ -258,9 +258,13 @@ void testRemoveHead_5Element()
 	thisList.insertHead(bodyPos);
 	thisList.insertHead(bodyPos);
 	thisList.insertHead(headPos);
-
+	// some helpful debugging code here that im going to leave just in case for the future
+	// int i;
+	// std::cout << "Before!" << std::endl;
+	// for (i = 0; i < thisList.getSize(); i++) {thisList.getElement(currentPos, i);std::cout << "i = " << i << ": " << currentPos.getSymbol() << std::endl;} 
 	thisList.removeHead();
-	
+	// std::cout << "After!" << std::endl;
+	// for (i = 0; i < thisList.getSize(); i++) {thisList.getElement(currentPos, i);std::cout << "i = " << i << ": " << currentPos.getSymbol() << std::endl;} 
 	int expectedSize = 4;
 	int actualSize = thisList.getSize();
 		
