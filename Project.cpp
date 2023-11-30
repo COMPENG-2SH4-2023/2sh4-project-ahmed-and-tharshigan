@@ -3,6 +3,7 @@
 #include "objPos.h"
 #include "GameMechs.h"
 #include "Player.h"
+#include "Food.h"
 
 using namespace std;
 
@@ -10,8 +11,13 @@ using namespace std;
 
 //Game mechanics object
 GameMechs* myGM;
+
 //Player object
 Player *myPlayer;
+
+//Food object
+Food *foodObj;
+
 // bool exitFlag;
 
 void Initialize(void);
@@ -50,11 +56,32 @@ void Initialize(void)
 
     myPlayer = new Player(myGM);
 
+    foodObj = new Food(myGM->getBoardSizeX(), myGM->getBoardSizeY());
+
+    //tempPos represents player initial position
+    objPos tempPos;
+
+    //Passing player position to tempPos
+    myPlayer->getPlayerPos(tempPos);
+
+    //Generating initial food coordinate
+    foodObj->generateFood(tempPos);
+
 }
 
 void GetInput(void)
 {
     myGM->getInput();
+
+    //Creating tempPos object to store player position
+    objPos tempPos;
+    myPlayer->getPlayerPos(tempPos);
+
+    //Regenerate food position when 'r' is pressed
+    if (myGM->getInput() == 'r'){
+        foodObj->generateFood(tempPos);
+    }
+
 }
 
 void RunLogic(void)
@@ -71,6 +98,8 @@ void RunLogic(void)
         //Class method to move player based on player direction
         myPlayer->movePlayer();
     }
+
+    myGM->clearInput(); //Resetting input to 0
 }
 
 void DrawScreen(void)
@@ -80,9 +109,10 @@ void DrawScreen(void)
     int totalRows = myGM->getBoardSizeY();
     int totalCols = myGM->getBoardSizeX();
     //Creating object of objPos class
-    objPos tempPos;
-    //Calling method to pass player position to tempPos object
-    myPlayer->getPlayerPos(tempPos);
+    objPos playerPos, foodPos;
+    //Calling method to pass player position to playerPos object
+    myPlayer->getPlayerPos(playerPos);
+    foodObj->getFoodPos(foodPos);
 
     //For loop to iterate through every row of game board
     for(int row=0; row<totalRows; row++){
@@ -94,14 +124,22 @@ void DrawScreen(void)
           }
 
           else{
+            //If statement to print border if in first or last column
             if(col == 0 || col == totalCols-1){
                 MacUILib_printf("%c", '#');
             }
 
-            else if(tempPos.x == col && tempPos.y == row){
-                MacUILib_printf("%c", tempPos.symbol);
+            //Else if to print player if at player position
+            else if(playerPos.x == col && playerPos.y == row){
+                MacUILib_printf("%c", playerPos.symbol);
             }
 
+            //Else if to print food if at food position
+            else if(foodPos.x == col && foodPos.y == row){
+                MacUILib_printf("%c", foodPos.symbol);
+            }
+
+            //Else to print space if no other character occupies that space
             else{
                 MacUILib_printf("%c", ' ');
             }
@@ -109,6 +147,8 @@ void DrawScreen(void)
         }
         MacUILib_printf("\n");
     }
+
+    MacUILib_printf("Score: %d, Player Pos: <%d, %d>\n, Food Pos: <%d, %d>\n", myGM->getScore(), playerPos.x, playerPos.y, foodPos.x, foodPos.y);
 
 }
 
@@ -125,6 +165,7 @@ void CleanUp(void)
     //Deallocating memory of objects created on the heap
     delete myGM;
     delete myPlayer;
+    delete foodObj;
 
     MacUILib_uninit();
 }
