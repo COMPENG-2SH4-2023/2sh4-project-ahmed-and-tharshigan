@@ -39,8 +39,10 @@ void Food::generateFood(objPos blockOff){
         rand_x = (rand() % (xRange-2))+1;
         rand_y = (rand() % (yRange-2))+1;
 
+        //Updating food position
         foodPos.setObjPos(rand_x, rand_y, 'o');
 
+        //Setting regenerateStatus to 1 when food pos is equal to player pos, regenerating random coordinates again
         if (foodPos.isPosEqual(&blockOff)){
             regenerateStatus = 1;
         }
