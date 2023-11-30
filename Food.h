@@ -18,7 +18,7 @@ class Food{
         Food(int boardSizeX, int boardSizeY);
         ~Food();
 
-        void generateFood(objPos blockOff);
+        void generateFood(objPos blockOff); //Need to change this
         void getFoodPos(objPos &returnPos);
 
 };

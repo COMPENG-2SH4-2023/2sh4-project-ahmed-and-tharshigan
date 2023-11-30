@@ -4,6 +4,7 @@
 #include "GameMechs.h"
 #include "Player.h"
 #include "Food.h"
+#include "objPosArrayList.h"
 
 using namespace std;
 
@@ -59,13 +60,13 @@ void Initialize(void)
     foodObj = new Food(myGM->getBoardSizeX(), myGM->getBoardSizeY());
 
     //tempPos represents player initial position
-    objPos tempPos;
+    objPos tempPos{-1,-1,'o'}; //Makesshift setup
 
-    //Passing player position to tempPos
-    myPlayer->getPlayerPos(tempPos);
+    // //Passing player position to tempPos
+    // myPlayer->getPlayerPos(tempPos);
 
     //Generating initial food coordinate
-    foodObj->generateFood(tempPos);
+    foodObj->generateFood(tempPos); //CHECK method
 
 }
 
@@ -73,14 +74,14 @@ void GetInput(void)
 {
     myGM->getInput();
 
-    //Creating tempPos object to store player position
-    objPos tempPos;
-    myPlayer->getPlayerPos(tempPos);
+    // //Creating tempPos object to store player position
+    // objPos tempPos;
+    // myPlayer->getPlayerPos(tempPos);
 
-    //Regenerate food position when 'r' is pressed
-    if (myGM->getInput() == 'r'){
-        foodObj->generateFood(tempPos);
-    }
+    // //Regenerate food position when 'r' is pressed
+    // if (myGM->getInput() == 'r'){
+    //     foodObj->generateFood(tempPos);
+    // }
 
 }
 
@@ -106,18 +107,43 @@ void DrawScreen(void)
 {
     MacUILib_clearScreen();    
     //Local variables and objects
+
+    bool drawn; //Variable to act as an indicator for when player body is drawn
+
     int totalRows = myGM->getBoardSizeY();
     int totalCols = myGM->getBoardSizeX();
-    //Creating object of objPos class
-    objPos playerPos, foodPos;
+
+    objPosArrayList* playerBody = myPlayer->getPlayerPos(); //CHECK 
+    objPos tempBody;
+
+    //Creating object to store food position
+    objPos foodPos;
     //Calling method to pass player position to playerPos object
-    myPlayer->getPlayerPos(playerPos);
     foodObj->getFoodPos(foodPos);
 
     //For loop to iterate through every row of game board
     for(int row=0; row<totalRows; row++){
         //For loop to iterate through every column per row
         for(int col=0; col<totalCols; col++){
+          
+          drawn = false;
+
+          //For loop to iterate through every element in player array list
+          for (int index=0; index<playerBody->getSize(); index++){
+            
+            playerBody->getElement(tempBody, index);
+
+            if(tempBody.x == col && tempBody.y == row){
+                MacUILib_printf("%c", tempBody.symbol);
+                drawn = true;
+                break;
+            }
+          }
+
+          //Continue statement to skip past logic below to prevent player body characters to be cleared by spaces
+          if(drawn) continue;
+          
+          
           //If statements to check if printing first or last row of game board
           if(row == 0 || row == totalRows-1){
             MacUILib_printf("%c", '#');
@@ -129,10 +155,10 @@ void DrawScreen(void)
                 MacUILib_printf("%c", '#');
             }
 
-            //Else if to print player if at player position
-            else if(playerPos.x == col && playerPos.y == row){
-                MacUILib_printf("%c", playerPos.symbol);
-            }
+            // //Else if to print player if at player position
+            // else if(playerPos.x == col && playerPos.y == row){
+            //     MacUILib_printf("%c", playerPos.symbol);
+            // }
 
             //Else if to print food if at food position
             else if(foodPos.x == col && foodPos.y == row){
@@ -148,7 +174,7 @@ void DrawScreen(void)
         MacUILib_printf("\n");
     }
 
-    MacUILib_printf("Score: %d, Player Pos: <%d, %d>\n, Food Pos: <%d, %d>\n", myGM->getScore(), playerPos.x, playerPos.y, foodPos.x, foodPos.y);
+    MacUILib_printf("Score: %d, Food Pos: <%d, %d>\n", myGM->getScore(), foodPos.x, foodPos.y);
 
 }
 

@@ -8,20 +8,35 @@ Player::Player(GameMechs* thisGMRef)
 
     // more actions to be included
 
-    //Initial player starting position
-    playerPos.setObjPos(mainGameMechsRef->getBoardSizeX()/2, mainGameMechsRef->getBoardSizeY()/2, '*'); //CHANGE INITIAL POSITION once board is set
+    //Initial player starting position object
+    objPos tempPos;
+    tempPos.setObjPos(mainGameMechsRef->getBoardSizeX()/2, mainGameMechsRef->getBoardSizeY()/2, '*'); //CHANGE INITIAL POSITION once board is set
+    
+    //Creating objPosArrayList on the heap
+    playerPosList = new objPosArrayList();
+    
+    //Adding tempPos to head of array list
+    playerPosList->insertHead(tempPos);
+
+    //FOR DEBUGGING - DELETE SEGMENT AFTER
+    //insert another 4 segments
+    playerPosList->insertHead(tempPos);
+    playerPosList->insertHead(tempPos);
+    playerPosList->insertHead(tempPos);
+    playerPosList->insertHead(tempPos);
 }
 
 
 Player::~Player()
 {
     // delete any heap members here
+    delete playerPosList;
 }
 
-void Player::getPlayerPos(objPos &returnPos)
+objPosArrayList* Player::getPlayerPos()
 {
-    returnPos.setObjPos(playerPos.x, playerPos.y, playerPos.symbol);
     // return the reference to the playerPos arrray list
+    return playerPosList;
 }
 
 void Player::updatePlayerDir()
@@ -68,50 +83,60 @@ void Player::movePlayer()
     //      ROW_SIZE is max number of rows in gameboard
     int col_size = mainGameMechsRef->getBoardSizeY();
     int row_size = mainGameMechsRef->getBoardSizeX();
-
+    
+    //Creating currentHead object to store position info of the current head
+    objPos currentHead;
+    playerPosList->getHeadElement(currentHead);
+    
     switch(myDir){
         case UP:
             //Subtracting y position by 1 to move player object up by one
-            playerPos.y--;
+            currentHead.y--;
             
             //If statement to check if player reaches top of the game board
-            if(playerPos.y == 0){
-                playerPos.y = col_size-2;
+            if(currentHead.y == 0){
+                currentHead.y = col_size-2;
             }
 
             break;
 
         case DOWN:
-            playerPos.y++;
+            currentHead.y++;
 
             //If statement to check if player reaches bottom of the game board
-            if (playerPos.y == col_size-1){
-                playerPos.y = 1;
+            if (currentHead.y == col_size-1){
+                currentHead.y = 1;
             }
 
             break;
 
         case LEFT:
 
-            playerPos.x--;
+            currentHead.x--;
 
             //If statement to check if player reaches the left border of game board
-            if (playerPos.x == 0){
-                playerPos.x = row_size-2;
+            if (currentHead.x == 0){
+                currentHead.x = row_size-2;
             }
 
             break;
 
         case RIGHT:
 
-            playerPos.x++;
+            currentHead.x++;
 
             //If statement to check if player reaches the right border of game board
-            if (playerPos.x == row_size-1){
-                playerPos.x = 1;
+            if (currentHead.x == row_size-1){
+                currentHead.x = 1;
             }
 
             break;
     }
+
+    //New current head inserted to the head of the list
+    playerPosList->insertHead(currentHead);
+
+    //Remove tail element
+    playerPosList->removeTail();
 }
 
