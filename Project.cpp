@@ -10,16 +10,14 @@ using namespace std;
 
 #define DELAY_CONST 100000 // 0.1s
 
-//Game mechanics object
+//Game mechanics object pointer
 GameMechs* myGM;
 
-//Player object
+//Player object pointer
 Player *myPlayer;
 
-//Food object
+//Food object pointer
 Food *foodObj;
-
-// bool exitFlag;
 
 void Initialize(void);
 void GetInput(void);
@@ -54,7 +52,7 @@ void Initialize(void)
     MacUILib_clearScreen();
 
     //Initiallizing object pointers on the heap
-    myGM = new GameMechs(20, 10); //26x13 board
+    myGM = new GameMechs(20, 10); //20x10 board
 
     foodObj = new Food(myGM->getBoardSizeX(), myGM->getBoardSizeY());
     
@@ -64,29 +62,14 @@ void Initialize(void)
 
     tempPosList = myPlayer->getPlayerPos();
 
-    // //tempPos represents player initial position
-    // objPos tempPos{-1,-1,'o'}; //Makesshift setup
-
-    // // //Passing player position to tempPos
-    // // myPlayer->getPlayerPos(tempPos);
-
-    // //Generating initial food coordinate
-    foodObj->generateFood(tempPosList); //CHECK method
+    //Generating initial food coordinate
+    foodObj->generateFood(tempPosList);
 
 }
 
 void GetInput(void)
 {
     myGM->getInput();
-
-    // //Creating tempPos object to store player position
-    // objPos tempPos;
-    // myPlayer->getPlayerPos(tempPos);
-
-    // //Regenerate food position when 'r' is pressed
-    // if (myGM->getInput() == 'r'){
-    //     foodObj->generateFood(tempPos);
-    // }
 
 }
 
@@ -111,14 +94,16 @@ void RunLogic(void)
 void DrawScreen(void)
 {
     MacUILib_clearScreen();    
-    //Local variables and objects
 
-    bool drawn; //Variable to act as an indicator for when player body is drawn
+    //Variable to act as an indicator for when player body is drawn
+    bool drawn; 
 
+    //Local variables to store gameboard size
     int totalRows = myGM->getBoardSizeY();
     int totalCols = myGM->getBoardSizeX();
 
-    objPosArrayList* playerBody = myPlayer->getPlayerPos(); //CHECK 
+    //Initializing objects to temporarily store playerPositionList and its elements individually
+    objPosArrayList* playerBody = myPlayer->getPlayerPos();
     objPos tempBody;
 
     //Creating object to store food position
@@ -131,6 +116,7 @@ void DrawScreen(void)
         //For loop to iterate through every column per row
         for(int col=0; col<totalCols; col++){
           
+          //Resetting drawn flag to false
           drawn = false;
 
           //For loop to iterate through every element in player array list
@@ -160,11 +146,6 @@ void DrawScreen(void)
                 MacUILib_printf("%c", '#');
             }
 
-            // //Else if to print player if at player position
-            // else if(playerPos.x == col && playerPos.y == row){
-            //     MacUILib_printf("%c", playerPos.symbol);
-            // }
-
             //Else if to print food if at food position
             else if(foodPos.x == col && foodPos.y == row){
                 MacUILib_printf("%c", foodPos.symbol);
@@ -191,7 +172,19 @@ void LoopDelay(void)
 
 void CleanUp(void)
 {
-    MacUILib_clearScreen();    
+    MacUILib_clearScreen();
+
+    //If statement to provide different output based on loseFlag condition
+    if(myGM->getLoseFlagStatus()){
+        MacUILib_printf("Collision occured!");
+    }
+
+    else{
+        MacUILib_printf("Exited game.");
+    }    
+
+    //Printing score
+    MacUILib_printf("\nScore: %d\n", myGM->getScore());
     
     //Deallocating memory of objects created on the heap
     delete myGM;

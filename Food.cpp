@@ -45,7 +45,9 @@ void Food::generateFood(objPosArrayList* blockOff){
         foodPos.setObjPos(rand_x, rand_y, 'o');
 
         for(int i=0; i<blockOff->getSize(); i++){
+            //Passing individual element's position info in arrayList to temporary object
             blockOff->getElement(tempElementPos, i);
+            
             //Setting regenerateStatus to 1 when food pos is equal to player pos, regenerating random coordinates again
             if (foodPos.isPosEqual(&tempElementPos)){
                 regenerateStatus = 1;

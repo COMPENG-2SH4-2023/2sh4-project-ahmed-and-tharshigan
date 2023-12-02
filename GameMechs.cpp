@@ -26,7 +26,6 @@ GameMechs::GameMechs(int boardX, int boardY)
 // ahmed: ^ - only if heap data members allocated in later iterations
 
 
-
 bool GameMechs::getExitFlagStatus()
 {
     return exitFlag;
@@ -65,7 +64,7 @@ void GameMechs::setLoseFlag(){
     loseFlag = true;
 }
 
-void GameMechs::setInput(char this_input) //DOUBLE CHECK PURPOSE OF THIS METHOD
+void GameMechs::setInput(char this_input) 
 {
     input = this_input;
 }

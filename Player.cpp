@@ -3,6 +3,7 @@
 
 Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
 {
+    //Initializing data members with passed parameters/default values
     mainGameMechsRef = thisGMRef;
     foodRef = thisFoodRef;
     myDir = STOP;
@@ -19,12 +20,6 @@ Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
     //Adding tempPos to head of array list
     playerPosList->insertHead(tempPos);
 
-    // //FOR DEBUGGING - DELETE SEGMENT AFTER
-    // //insert another 4 segments
-    // playerPosList->insertHead(tempPos);
-    // playerPosList->insertHead(tempPos);
-    // playerPosList->insertHead(tempPos);
-    // playerPosList->insertHead(tempPos);
 }
 
 
@@ -47,6 +42,7 @@ void Player::updatePlayerDir()
     //Receiving input through getInput() from GameMechs class    
     char input = mainGameMechsRef->getInput();
     
+    //Case statements to set player direction based on key entered
     switch(input){
         
         case 'w':
@@ -80,8 +76,8 @@ void Player::movePlayer()
 {
     // PPA3 Finite State Machine logic
 
-    //NOTE: COL_SIZE is the max number of columns in gameboard
-    //      ROW_SIZE is max number of rows in gameboard
+    //COL_SIZE is the max number of columns in gameboard
+    //ROW_SIZE is max number of rows in gameboard
     int col_size = mainGameMechsRef->getBoardSizeY();
     int row_size = mainGameMechsRef->getBoardSizeX();
     
@@ -89,6 +85,7 @@ void Player::movePlayer()
     objPos currentHead;
     playerPosList->getHeadElement(currentHead);
 
+    //Creating tempFoodPos to temporarily store position info of current food item on the board
     objPos tempFoodPos;
     foodRef->getFoodPos(tempFoodPos);
     
@@ -105,6 +102,7 @@ void Player::movePlayer()
             break;
 
         case DOWN:
+            //Incrementing y position by 1 to player down by 1 row
             currentHead.y++;
 
             //If statement to check if player reaches bottom of the game board
@@ -116,6 +114,7 @@ void Player::movePlayer()
 
         case LEFT:
 
+            //Decreasing x position of head element by one to the left
             currentHead.x--;
 
             //If statement to check if player reaches the left border of game board
@@ -127,6 +126,7 @@ void Player::movePlayer()
 
         case RIGHT:
 
+            //Incrementing x position of head element by one to the right
             currentHead.x++;
 
             //If statement to check if player reaches the right border of game board
@@ -138,12 +138,14 @@ void Player::movePlayer()
     }
 
     //New current head inserted to the head of the list
-    playerPosList->insertHead(currentHead);
+    playerPosList->insertHead(currentHead); 
     
-
     //If to generate new food position if new snake head collides with food
     if(currentHead.isPosEqual(&tempFoodPos)){
+        //Regenerating food item
         foodRef->generateFood(playerPosList);
+        //Increment score by 1 for every element added
+        mainGameMechsRef->incrementScore();
     }
 
     //Else statement to remove tail only when there's no collision
@@ -151,5 +153,35 @@ void Player::movePlayer()
         //Remove tail element
         playerPosList->removeTail();
     }
+
+    //If statement to check collision status
+    if(checkSelfCollision()){
+        //Setting both exit and lose flag true when self collision is true
+        mainGameMechsRef->setExitTrue();
+        mainGameMechsRef->setLoseFlag();
+    }
+    
 }
 
+bool Player::checkSelfCollision(){
+    
+    //Local objects
+    objPos headElement, bodyElement;
+
+    //Passing new head element's position to local object
+    playerPosList->getHeadElement(headElement);
+
+    //For loop to iterate through every initialized element within playerPosList aside from head element
+    for(int i=1; i<playerPosList->getSize(); i++){
+        //Passing element's position to local object
+        playerPosList->getElement(bodyElement, i);
+        //Comparing if head element' is equal to other elements based on position, indicating self collision
+        if(headElement.isPosEqual(&bodyElement)){
+            //Returning true, indicating collision
+            return true;
+        }
+    }
+
+    //Returning false, indicating no collision
+    return false;
+}
