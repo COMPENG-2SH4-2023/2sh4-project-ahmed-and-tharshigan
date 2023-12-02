@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "objPos.h"
+#include "objPosArrayList.h"
 
 class Food{
     private:
@@ -18,7 +19,7 @@ class Food{
         Food(int boardSizeX, int boardSizeY);
         ~Food();
 
-        void generateFood(objPos blockOff); //Need to change this
+        void generateFood(objPosArrayList* blockOff); //Need to change this
         void getFoodPos(objPos &returnPos);
 
 };

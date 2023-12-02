@@ -60,14 +60,18 @@ void Initialize(void)
     
     myPlayer = new Player(myGM, foodObj);
 
-    //tempPos represents player initial position
-    objPos tempPos{-1,-1,'o'}; //Makesshift setup
+    objPosArrayList* tempPosList;
 
-    // //Passing player position to tempPos
-    // myPlayer->getPlayerPos(tempPos);
+    tempPosList = myPlayer->getPlayerPos();
 
-    //Generating initial food coordinate
-    foodObj->generateFood(tempPos); //CHECK method
+    // //tempPos represents player initial position
+    // objPos tempPos{-1,-1,'o'}; //Makesshift setup
+
+    // // //Passing player position to tempPos
+    // // myPlayer->getPlayerPos(tempPos);
+
+    // //Generating initial food coordinate
+    foodObj->generateFood(tempPosList); //CHECK method
 
 }
 

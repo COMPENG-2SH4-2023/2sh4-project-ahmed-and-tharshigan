@@ -24,10 +24,13 @@ Food::~Food(){
 
 }
 
-void Food::generateFood(objPos blockOff){
+void Food::generateFood(objPosArrayList* blockOff){
 
     //Local variables
     int regenerateStatus, rand_x, rand_y;
+
+    //Object to temporarily store a playerArrayList element's position
+    objPos tempElementPos;
 
     //Do while loop to continuosly generate random coordinates for food
     do{
@@ -41,10 +44,14 @@ void Food::generateFood(objPos blockOff){
         //Updating food position
         foodPos.setObjPos(rand_x, rand_y, 'o');
 
-        //Setting regenerateStatus to 1 when food pos is equal to player pos, regenerating random coordinates again
-        if (foodPos.isPosEqual(&blockOff)){
-            regenerateStatus = 1;
+        for(int i=0; i<blockOff->getSize(); i++){
+            blockOff->getElement(tempElementPos, i);
+            //Setting regenerateStatus to 1 when food pos is equal to player pos, regenerating random coordinates again
+            if (foodPos.isPosEqual(&tempElementPos)){
+                regenerateStatus = 1;
+            }
         }
+
 
     }while(regenerateStatus);
 

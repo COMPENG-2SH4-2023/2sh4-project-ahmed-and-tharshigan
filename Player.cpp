@@ -143,7 +143,7 @@ void Player::movePlayer()
 
     //If to generate new food position if new snake head collides with food
     if(currentHead.isPosEqual(&tempFoodPos)){
-        foodRef->generateFood(currentHead);
+        foodRef->generateFood(playerPosList);
     }
 
     //Else statement to remove tail only when there's no collision
