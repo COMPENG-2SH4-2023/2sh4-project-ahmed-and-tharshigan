@@ -53,11 +53,12 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
 
+    //Initiallizing object pointers on the heap
     myGM = new GameMechs(20, 10); //26x13 board
 
-    myPlayer = new Player(myGM);
-
     foodObj = new Food(myGM->getBoardSizeX(), myGM->getBoardSizeY());
+    
+    myPlayer = new Player(myGM, foodObj);
 
     //tempPos represents player initial position
     objPos tempPos{-1,-1,'o'}; //Makesshift setup

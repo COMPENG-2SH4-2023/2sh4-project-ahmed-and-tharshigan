@@ -1,9 +1,10 @@
 #include "Player.h"
 
 
-Player::Player(GameMechs* thisGMRef)
+Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
 {
     mainGameMechsRef = thisGMRef;
+    foodRef = thisFoodRef;
     myDir = STOP;
 
     // more actions to be included
@@ -18,12 +19,12 @@ Player::Player(GameMechs* thisGMRef)
     //Adding tempPos to head of array list
     playerPosList->insertHead(tempPos);
 
-    //FOR DEBUGGING - DELETE SEGMENT AFTER
-    //insert another 4 segments
-    playerPosList->insertHead(tempPos);
-    playerPosList->insertHead(tempPos);
-    playerPosList->insertHead(tempPos);
-    playerPosList->insertHead(tempPos);
+    // //FOR DEBUGGING - DELETE SEGMENT AFTER
+    // //insert another 4 segments
+    // playerPosList->insertHead(tempPos);
+    // playerPosList->insertHead(tempPos);
+    // playerPosList->insertHead(tempPos);
+    // playerPosList->insertHead(tempPos);
 }
 
 
@@ -87,6 +88,9 @@ void Player::movePlayer()
     //Creating currentHead object to store position info of the current head
     objPos currentHead;
     playerPosList->getHeadElement(currentHead);
+
+    objPos tempFoodPos;
+    foodRef->getFoodPos(tempFoodPos);
     
     switch(myDir){
         case UP:
@@ -135,8 +139,17 @@ void Player::movePlayer()
 
     //New current head inserted to the head of the list
     playerPosList->insertHead(currentHead);
+    
 
-    //Remove tail element
-    playerPosList->removeTail();
+    //If to generate new food position if new snake head collides with food
+    if(currentHead.isPosEqual(&tempFoodPos)){
+        foodRef->generateFood(currentHead);
+    }
+
+    //Else statement to remove tail only when there's no collision
+    else{
+        //Remove tail element
+        playerPosList->removeTail();
+    }
 }
 

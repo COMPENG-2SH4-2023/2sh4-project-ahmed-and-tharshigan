@@ -25,14 +25,13 @@ Food::~Food(){
 }
 
 void Food::generateFood(objPos blockOff){
-    //Generate rand x and y, make sure not in border or in blockOff
-    //Check x and y against 0 and boardSize x/y
-    //To compare blockOff use isPosEqual() method
 
-    //Local variable acting as an exitFlag for dowhile loop below
+    //Local variables
     int regenerateStatus, rand_x, rand_y;
 
+    //Do while loop to continuosly generate random coordinates for food
     do{
+        //Resetting do while loop exit flag
         regenerateStatus = 0;
         
         //Generating random x and y values within ranges
