@@ -47,6 +47,7 @@ void Player::updatePlayerDir()
     //Case statements to set player direction based on key entered
     switch(input){
         
+        //If statements within each case to only switch directions when current direction is not on the same axis
         case 'w':
             if(myDir != UP && myDir != DOWN){
                 myDir = UP;
@@ -79,7 +80,7 @@ void Player::updateCurrentHead()
     // PPA3 Finite State Machine logic
 
     // update our private head variable
-    playerPosList->getHeadElement(currentHead); // pass by reference here?
+    playerPosList->getHeadElement(currentHead); 
 
     // local method vars.
     //COL_SIZE is the max number of columns in gameboard
@@ -87,6 +88,7 @@ void Player::updateCurrentHead()
     int col_size = mainGameMechsRef->getBoardSizeY();
     int row_size = mainGameMechsRef->getBoardSizeX();
 
+    //Switch statement to move player based on current direction
     switch(myDir){
         case UP:
             //Subtracting y position by 1 to move player object up by one
@@ -140,18 +142,20 @@ void Player::movePlayer()
 {
     //Creating tempFoodList to temporarily store position info of current food items on the board
     objPosArrayList *tempFoodList = foodRef->getFoodPos();
+    
     // the element in this list
     objPos tempFoodPos;
 
     // update head
     updateCurrentHead();
+
     //New current head inserted to the head of the list
     playerPosList->insertHead(currentHead); 
     
     //If to generate new food position if new snake head collides with food
     // check for collision with food elements
     int i;
-    bool collided = false;
+    bool collided = false; //Variable to indicate collision status
     for (i = 0; i < tempFoodList->getSize(); i++) {
         tempFoodList->getElement(tempFoodPos, i);
 

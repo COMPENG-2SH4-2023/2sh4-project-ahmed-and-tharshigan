@@ -134,8 +134,10 @@ void DrawScreen(void)
           //For loop to iterate through every element in food array list
           for (int index=0; index<tempFoodList->getSize(); index++){
             
+            //Passing element's positional info at index i of food array list
             tempFoodList->getElement(tempFoodPos, index);
 
+            //Printing food character when program is at the position of food item
             if(tempFoodPos.x == col && tempFoodPos.y == row){
                 MacUILib_printf("%c", tempFoodPos.symbol);
                 drawn = true;

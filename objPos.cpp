@@ -1,13 +1,13 @@
 #include "objPos.h"
 
-objPos::objPos()
+objPos::objPos() //Default constructor
 {
     x = 0;
     y = 0;
     symbol = 0; //NULL
 }
 
-objPos::objPos(objPos &o)
+objPos::objPos(objPos &o) //Copy constructor
 {
     x = o.x;
     y = o.y;

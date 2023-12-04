@@ -39,9 +39,7 @@ class Player
         Food* foodRef;
 
         // Above and Beyond
-        // I am going to manually break down the public movePlayer method.
-        // To implement the special food logic, i can repeat code less
-        // since i will need to update current head multiple times for special food
+        //Function to move current head based on current direction multiple times for special food interaction
         void updateCurrentHead();
         objPos currentHead; // currentHead variable to be shared for special food Above and Beyond feature
 };

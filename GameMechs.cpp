@@ -23,7 +23,7 @@ GameMechs::GameMechs(int boardX, int boardY)
 
 // do you need a destructor? 
 
-// ahmed: ^ - only if heap data members allocated in later iterations
+// only if heap data members allocated in later iterations
 
 
 bool GameMechs::getExitFlagStatus()
