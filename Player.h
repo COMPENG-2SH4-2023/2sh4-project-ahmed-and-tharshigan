@@ -22,6 +22,8 @@ class Player
 
         objPosArrayList* getPlayerPos(); // Upgrade this in iteration 3.
         void updatePlayerDir();
+        
+        // changed in above and beyond
         void movePlayer();
 
         bool checkSelfCollision();
@@ -35,6 +37,13 @@ class Player
 
         //Reference to food class
         Food* foodRef;
+
+        // Above and Beyond
+        // I am going to manually break down the public movePlayer method.
+        // To implement the special food logic, i can repeat code less
+        // since i will need to update current head multiple times for special food
+        void updateCurrentHead();
+        objPos currentHead; // currentHead variable to be shared for special food Above and Beyond feature
 };
 
 #endif

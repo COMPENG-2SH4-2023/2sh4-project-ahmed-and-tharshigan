@@ -20,6 +20,8 @@ Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
     //Adding tempPos to head of array list
     playerPosList->insertHead(tempPos);
 
+    currentHead = tempPos; // since this is the initial head
+
 }
 
 
@@ -72,23 +74,19 @@ void Player::updatePlayerDir()
     }        
 }
 
-void Player::movePlayer()
+void Player::updateCurrentHead()
 {
     // PPA3 Finite State Machine logic
 
+    // update our private head variable
+    playerPosList->getHeadElement(currentHead); // pass by reference here?
+
+    // local method vars.
     //COL_SIZE is the max number of columns in gameboard
     //ROW_SIZE is max number of rows in gameboard
     int col_size = mainGameMechsRef->getBoardSizeY();
     int row_size = mainGameMechsRef->getBoardSizeX();
-    
-    //Creating currentHead object to store position info of the current head
-    objPos currentHead;
-    playerPosList->getHeadElement(currentHead);
 
-    //Creating tempFoodPos to temporarily store position info of current food item on the board
-    objPos tempFoodPos;
-    foodRef->getFoodPos(tempFoodPos);
-    
     switch(myDir){
         case UP:
             //Subtracting y position by 1 to move player object up by one
@@ -136,20 +134,68 @@ void Player::movePlayer()
 
             break;
     }
+}
 
+void Player::movePlayer()
+{
+    //Creating tempFoodList to temporarily store position info of current food items on the board
+    objPosArrayList *tempFoodList = foodRef->getFoodPos();
+    // the element in this list
+    objPos tempFoodPos;
+
+    // update head
+    updateCurrentHead();
     //New current head inserted to the head of the list
     playerPosList->insertHead(currentHead); 
     
     //If to generate new food position if new snake head collides with food
-    if(currentHead.isPosEqual(&tempFoodPos)){
-        //Regenerating food item
-        foodRef->generateFood(playerPosList);
-        //Increment score by 1 for every element added
-        mainGameMechsRef->incrementScore();
+    // check for collision with food elements
+    int i;
+    bool collided = false;
+    for (i = 0; i < tempFoodList->getSize(); i++) {
+        tempFoodList->getElement(tempFoodPos, i);
+
+        // normal food condition
+        if (currentHead.isPosEqual(&tempFoodPos) && tempFoodPos.getSymbol() == 'o') {
+            //Regenerating food item
+            foodRef->generateFood(playerPosList);
+            //Increment score by 1 for every element added
+            mainGameMechsRef->incrementScore();
+            collided = true;
+            break;
+        } 
+        // helpful '$' special food increases 10 score, doesnt increase size
+        else if (currentHead.isPosEqual(&tempFoodPos) && tempFoodPos.getSymbol() == '$') {
+            //Regenerating food item
+            foodRef->generateFood(playerPosList);
+            //Increment score by 1 for every element added
+            int i;
+            for (i = 0; i < 10; i++) {
+                mainGameMechsRef->incrementScore();
+            }
+            playerPosList->removeHead();
+            collided = true;
+            break;
+        }
+        // bad 'X' special food increases size by 3, and score only once
+        else if (currentHead.isPosEqual(&tempFoodPos) && tempFoodPos.getSymbol() == 'X') {
+            //Regenerating food item
+            foodRef->generateFood(playerPosList);
+            //Increment score by 1 for every element added
+            int i;
+            for (i = 0; i < 3; i++) {
+                updateCurrentHead();
+                playerPosList->insertHead(currentHead);
+            }
+            mainGameMechsRef->incrementScore();
+            collided = true;
+            break;
+        }
     }
+    
 
     //Else statement to remove tail only when there's no collision
-    else{
+    if (!collided){
         //Remove tail element
         playerPosList->removeTail();
     }

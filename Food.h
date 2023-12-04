@@ -10,7 +10,7 @@
 
 class Food{
     private:
-        objPos foodPos;
+        objPosArrayList *foodBucket;
         int xRange;
         int yRange;
 
@@ -20,7 +20,8 @@ class Food{
         ~Food();
 
         void generateFood(objPosArrayList* blockOff); //Need to change this
-        void getFoodPos(objPos &returnPos);
+        // void getFoodPos(objPos &returnPos); old getter writes into return obj
+        objPosArrayList* getFoodPos();
 
 };
 

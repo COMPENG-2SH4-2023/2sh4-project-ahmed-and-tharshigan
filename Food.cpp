@@ -2,7 +2,15 @@
 
 Food::Food(){
     //Initialising food object to be outside of game board
+    objPos foodPos;
     foodPos.setObjPos(-1, -1, 'o');
+    
+    //Creating objPosArrayList on the heap
+    foodBucket = new objPosArrayList();
+    
+    //Adding foodPos to head of array list
+    foodBucket->insertHead(foodPos);
+
     xRange = 30;
     yRange = 15;
 
@@ -12,7 +20,15 @@ Food::Food(){
 
 Food::Food(int boardSizeX, int boardSizeY){
     //Initialising food object to be outside of game board
+    objPos foodPos;
     foodPos.setObjPos(-1, -1, 'o');
+    
+    //Creating objPosArrayList on the heap
+    foodBucket = new objPosArrayList();
+    
+    //Adding foodPos to head of array list
+    foodBucket->insertHead(foodPos);
+
     xRange = boardSizeX;
     yRange = boardSizeY;
 
@@ -21,7 +37,7 @@ Food::Food(int boardSizeX, int boardSizeY){
 }
 
 Food::~Food(){
-
+    delete foodBucket;
 }
 
 void Food::generateFood(objPosArrayList* blockOff){
@@ -29,38 +45,59 @@ void Food::generateFood(objPosArrayList* blockOff){
     //Local variables
     int regenerateStatus, rand_x, rand_y;
 
-    //Object to temporarily store a playerArrayList element's position
-    objPos tempElementPos;
+    //Object to temporarily store a playerArrayList element's position and a foodBucket element's pos
+    objPos tempElementPos, tempFoodPos;
 
     //Do while loop to continuosly generate random coordinates for food
     do{
         //Resetting do while loop exit flag
         regenerateStatus = 0;
+
+        // clear the list
+        while (foodBucket->getSize() > 0) {
+            foodBucket->removeTail(); // better than remove head
+        }
+
+        int i, j;
+        for (i = 0; i < 5; i++) { // 5 food objects
+            objPos newFoodPos;
+            //Generating random x and y values within ranges
+            rand_x = (rand() % (xRange-2))+1;
+            rand_y = (rand() % (yRange-2))+1;
+            // generate special chars for special food
+            char foodSymbol;
+            if (i == 0) {foodSymbol = 'X';} else if (i == 1) {foodSymbol = '$';} else {foodSymbol = 'o';}
+            
+            //Updating food position
+            newFoodPos.setObjPos(rand_x, rand_y, foodSymbol);
+
+            foodBucket->insertTail(newFoodPos);
+        }
         
-        //Generating random x and y values within ranges
-        rand_x = (rand() % (xRange-2))+1;
-        rand_y = (rand() % (yRange-2))+1;
+        // check if overlapping
 
-        //Updating food position
-        foodPos.setObjPos(rand_x, rand_y, 'o');
-
-        for(int i=0; i<blockOff->getSize(); i++){
+        for(i=0; i<blockOff->getSize(); i++){
             //Passing individual element's position info in arrayList to temporary object
             blockOff->getElement(tempElementPos, i);
             
             //Setting regenerateStatus to 1 when food pos is equal to player pos, regenerating random coordinates again
-            if (foodPos.isPosEqual(&tempElementPos)){
-                regenerateStatus = 1;
+            for (j = 0; j < foodBucket->getSize(); j++) {
+                foodBucket->getElement(tempFoodPos, j);
+                if (tempFoodPos.isPosEqual(&tempElementPos)) {
+                    regenerateStatus = 1;
+                    break;
+                }
             }
+            
         }
 
 
-    }while(regenerateStatus);
+    } while(regenerateStatus);
 
 
 }
 
-void Food::getFoodPos(objPos &returnPos){
-    //foodPos data members are passed to returnPos through setObjPos method
-    returnPos.setObjPos(foodPos);
+objPosArrayList* Food::getFoodPos() {
+    // simply return the bucket
+    return foodBucket;
 }

@@ -106,10 +106,10 @@ void DrawScreen(void)
     objPosArrayList* playerBody = myPlayer->getPlayerPos();
     objPos tempBody;
 
-    //Creating object to store food position
-    objPos foodPos;
-    //Calling method to pass player position to playerPos object
-    foodObj->getFoodPos(foodPos);
+    //Creating tempFoodList to temporarily store position info of current food items on the board
+    objPosArrayList *tempFoodList = foodObj->getFoodPos();
+    // the element in this list
+    objPos tempFoodPos;
 
     //For loop to iterate through every row of game board
     for(int row=0; row<totalRows; row++){
@@ -131,6 +131,18 @@ void DrawScreen(void)
             }
           }
 
+          //For loop to iterate through every element in food array list
+          for (int index=0; index<tempFoodList->getSize(); index++){
+            
+            tempFoodList->getElement(tempFoodPos, index);
+
+            if(tempFoodPos.x == col && tempFoodPos.y == row){
+                MacUILib_printf("%c", tempFoodPos.symbol);
+                drawn = true;
+                break;
+            }
+          }
+
           //Continue statement to skip past logic below to prevent player body characters to be cleared by spaces
           if(drawn) continue;
           
@@ -146,11 +158,6 @@ void DrawScreen(void)
                 MacUILib_printf("%c", '#');
             }
 
-            //Else if to print food if at food position
-            else if(foodPos.x == col && foodPos.y == row){
-                MacUILib_printf("%c", foodPos.symbol);
-            }
-
             //Else to print space if no other character occupies that space
             else{
                 MacUILib_printf("%c", ' ');
@@ -160,7 +167,7 @@ void DrawScreen(void)
         MacUILib_printf("\n");
     }
 
-    MacUILib_printf("Score: %d, Food Pos: <%d, %d>\n", myGM->getScore(), foodPos.x, foodPos.y);
+    MacUILib_printf("Score: %d", myGM->getScore());
 
 }
 
